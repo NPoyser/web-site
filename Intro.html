@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            select, option {
+                padding: 10px;
+                font-size: 16px;
+            }
+        </style>
+        <style>
+            body {
+              display: flex;
+              flex-direction: column;  /* Stack the content vertically */
+              align-items: center;     /* Horizontally center the content */
+              height: 100vh;           /* Full viewport height */
+              margin: 0;
+              font-family: Arial, sans-serif;
+            }
+    
+            h1 {
+              margin-top: 60px;  /* Remove top margin to keep the header at the top */
+            }
+    
+            p {
+              margin-top:80px; /* Add some space between the header and paragraph */
+            }
+            .content {
+              width: 100%;
+              max-width: 800px;   /* Limit line length for readability */
+              padding: 0 20px;    /* Horizontal padding */
+              box-sizing: border-box;
+              text-align: center;
+            }
+            .grid-container {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 20px;
+              justify-items: center;  /* Align all items dead center horizontally */
+              align-items: start;     /* aligns tops of all grid items */
+            }
+
+            .grid-container p {
+              background-color: #ffffff;  /* light background for light mode */
+              color: #333;                /* dark text for light mode */
+              border-left: 6px solid #3498db;
+              padding: 20px;
+              margin: 0;
+              border-radius: 10px;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+              transition: transform 0.2s ease, background-color 0.3s ease;
+              box-sizing: border-box;
+              width: 100%;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+                /* New: ensure alignment and consistent sizing */
+              box-sizing: border-box;
+              width: 100%;
+              text-align: left;
+            }
+            .grid-container p a {
+              color: #1e90ff; /* A bright blue that stands out */
+              text-decoration: underline;
+            }
+
+            .grid-container p:hover {
+              transform: translateY(-3px);
+              background-color: #ecf9ff;
+            }
+
+            /* Dark Mode styling */
+            @media (prefers-color-scheme: dark) {
+              
+
+
+              .grid-container p {
+                background-color: #edf6ff;   /* darker background for paragraphs */
+                color: #3490fa;               /* lighter text for dark mode */
+                border-left: 6px solid #5ebdfd; /* accent color stays the same */
+              }
+              .grid-container p a {
+                color: #4aa8ff; /* Lighter blue for dark mode */
+              }
+
+              .grid-container p:hover {
+                transform: translateY(-3px);
+                background-color: #e2f1ff;   /* slightly lighter on hover */
+              }
+            }
+
+
+
+            .grid-container2 {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 20px;
+              justify-items: center;  /* Align all items dead center horizontally */
+              align-items: start;     /* aligns tops of all grid items */
+            }
+
+            .grid-container2 p {
+              background-color: #ffffff;  /* light background for light mode */
+              color: #333;                /* dark text for light mode */
+              border-left: 6px solid #3498db;
+              padding: 20px;
+              margin: 0;
+              border-radius: 10px;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+              transition: transform 0.2s ease, background-color 0.3s ease;
+              box-sizing: border-box;
+              width: 100%;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+                /* New: ensure alignment and consistent sizing */
+              box-sizing: border-box;
+              width: 100%;
+              text-align: left;
+            }
+            .grid-container2 p a {
+              color: #f0ff1e; /* A bright blue that stands out */
+              text-decoration: underline;
+            }
+
+            .grid-container2 p:hover {
+              transform: translateY(-3px);
+              background-color: #ecf9ff;
+            }
+
+            /* Dark Mode styling */
+            @media (prefers-color-scheme: dark) {
+
+              .grid-container2 p {
+                background-color: #f1ffc9;   /* darker background for paragraphs */
+                color: #8a9c00;               /* lighter text for dark mode */
+                border-left: 6px solid #bbc500; /* accent color stays the same */
+              }
+              .grid-container2 p a {
+                color: #4aa8ff; /* Lighter blue for dark mode */
+              }
+
+              .grid-container2 p:hover {
+                transform: translateY(-3px);
+                background-color: #fdffe2;   /* slightly lighter on hover */
+              }
+            }
+            @media (max-width: 600px) {
+              .content img {
+                width: 100%;
+                height: auto;
+              }
+
+              .content {
+                padding: 0 10px;
+              }
+            }
+            .section {
+              margin: 60px auto;
+              max-width: 1200px;
+              padding: 0 20px;
+            }
+
+            .headerb {
+              text-align: left;
+              font-size: 2rem;
+              margin-bottom: 30px;
+              color: #1a8cff;
+              text-shadow: 1px 1px 0 #fff;
+            }
+            .headery {
+              text-align: left;
+              font-size: 2rem;
+              margin-bottom: 30px;
+              color: #878e00;
+              text-shadow: 1px 1px 0 #fff;
+            }
+    </style>
+    </head>
+    <body>
+        <h1>NPoyser</h1>
+        <h2>A student in course : IT 4403 – Advanced Web and Mobile Applications</h2>
+        <div class="section">
+        <br>
+        <div class="content">
+        
+        <div class="grid-container">
+        
+                <p>Brief overview: This website was created with the intent for course class, showcasing what is done in this course during the semester.</p>
+        </div>
+        <br>
+        <div class="grid-container">
+        
+                <p>Course Information: The course number is IT 4403, it is a advanced class for Web and Mobile Applications.</p>
+        </div>
+        <br>
+        <h2 class="headerb">Exercise & Lab links:</h2>
+        <div class="grid-container">
+            <p><a href="Exercises.html" target="_blank">My Exercises</a> <br> <a href="Labs.html" target="_blank">My Labs</a></p>
+        </div>
+        <br>
+        <br>
+        <br>
+        <h2 class="headery">Disclaimer:</h2>
+        <div class="grid-container2">
+            <p> Warning: <br> This is a student website created for course projects in IT 4403</p>
+        </div>
+        <br>
+        <h2 class="headerb">Related links:</h2>
+        <div class="grid-container">
+            <p><a href="https://www.kennesaw.edu/ccse/academics/information-technology/" target="_blank">CCSE Department of IT Website</a></p>
+        </div>
+        <br>
+        <p>&copy; 2025 Npoyser.github.io/web-site/</p>
+        </div>
+        </div>
+    </body>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            select, option {
+                padding: 10px;
+                font-size: 16px;
+            }
+        </style>
+        <style>
+            body {
+              display: flex;
+              flex-direction: column;  /* Stack the content vertically */
+              align-items: center;     /* Horizontally center the content */
+              height: 100vh;           /* Full viewport height */
+              margin: 0;
+              font-family: Arial, sans-serif;
+            }
+    
+            h1 {
+              margin-top: 60px;  /* Remove top margin to keep the header at the top */
+            }
+    
+            p {
+              margin-top:80px; /* Add some space between the header and paragraph */
+            }
+            .content {
+              width: 100%;
+              max-width: 800px;   /* Limit line length for readability */
+              padding: 0 20px;    /* Horizontal padding */
+              box-sizing: border-box;
+              text-align: center;
+            }
+            .grid-container {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+              gap: 20px;
+              justify-items: center;  /* Align all items dead center horizontally */
+              align-items: start;     /* aligns tops of all grid items */
+            }
+
+            .grid-container p {
+              background-color: #ffffff;  /* light background for light mode */
+              color: #333;                /* dark text for light mode */
+              border-left: 6px solid #3498db;
+              padding: 20px;
+              margin: 0;
+              border-radius: 10px;
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+              transition: transform 0.2s ease, background-color 0.3s ease;
+              box-sizing: border-box;
+              width: 100%;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+                /* New: ensure alignment and consistent sizing */
+              box-sizing: border-box;
+              width: 100%;
+              text-align: left;
+            }
+            .grid-container p a {
+              color: #1e90ff; /* A bright blue that stands out */
+              text-decoration: underline;
+            }
+
+            .grid-container p:hover {
+              transform: translateY(-3px);
+              background-color: #ecf9ff;
+            }
+
+            /* Dark Mode styling */
+            @media (prefers-color-scheme: dark) {
+              
+
+
+              .grid-container p {
+                background-color: #edf6ff;   /* darker background for paragraphs */
+                color: #3490fa;               /* lighter text for dark mode */
+                border-left: 6px solid #5ebdfd; /* accent color stays the same */
+              }
+              .grid-container p a {
+                color: #4aa8ff; /* Lighter blue for dark mode */
+              }
+
+              .grid-container p:hover {
+                transform: translateY(-3px);
+                background-color: #e2f1ff;   /* slightly lighter on hover */
+              }
+            }
+    </style>
+    </head>
+    <body>
+        <h1>Labs</h1>
+        <br>
+        <div class="section">
+        <br>
+        <div class="content">
+        
+        <div class="grid-container">
+        
+                <p>Nothing for now...</p>
+        </div>
+        </div>
+        </div>
+    </body>
