@@ -140,17 +140,20 @@ $(document).ready(function(){
   ];
 
   let index = 0;
-	
-function showImage() {
-    $("#slideImage").stop(true, true).fadeOut(200, function() {
-        $(this).attr("src", images[index].url)
-               .attr("alt", images[index].alt)
-               .fadeIn(200);
-    });
 
-    $("#caption").text(images[index].caption);
-    $("#counter").text(`Image ${index + 1} of ${images.length}`);
-}
+	images.forEach(img => { const i = new Image(); i.src = img.url; });
+
+      function showImage() {
+        const $img = $("#slideImage");
+        $("#caption").text(images[index].caption);
+        $("#counter").text(`Image ${index + 1} of ${images.length}`);
+
+        // Hide immediately, change src, then fade in
+        $img.stop(true, true).hide()
+            .attr("src", images[index].url)
+            .attr("alt", images[index].alt)
+            .fadeIn(400);
+      }
   
 
   $("#slideImage").on("error", function(){
@@ -182,6 +185,7 @@ function showImage() {
 
 
 </body>
+
 
 
 
