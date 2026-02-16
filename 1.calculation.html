@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jQuery Calculator</title>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+body {
+	margin: 0;
+	font-family: Arial, sans-serif;
+	background: #ffffff;
+	padding-top: 60px;  /* space for navbar */
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+/* Back arrow at top-left corner */
+#back-arrow {
+	position: fixed;
+	top: 50%;             /* vertical center of viewport */
+	transform: translateY(-50%);
+	left: 15px;
+	font-size: 22px;
+	color: white;
+	background: #1a1a2e;
+	width: 35px;             
+	height: 35px;            
+	display: flex;           /* use flexbox to center */
+	justify-content: center; /* horizontal center */
+	align-items: center;     /* vertical center */
+	/*border-radius: 5px;      */
+	border-radius: 50%;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background 0.3s, color 0.3s;
+	z-index: 1000;
+}
+
+#back-arrow:hover {
+	color: #00eeff;
+	background: #000;
+}
+
+/* Simple centered navbar */
+#navbar {
+	width: 100%;
+	background: #1a1a2e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	text-align: center;
+	padding: 15px 0;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 500;         /* behind arrow */
+}
+
+#navbar .nav-home {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s;
+}
+
+#navbar .nav-home:hover {
+	color: #cfcff7;
+}
+
+/* Calculator styling */
+#calculator {
+	border: 2px solid #1a1a2e;
+	padding: 30px;
+	width: 400px;
+	text-align: center;
+	margin-top: 20px;
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	border-radius: 10px;
+}
+
+input, select, button {
+	width: 95%;
+	padding: 10px;
+	margin: 8px 0;
+	font-size: 16px;
+}
+
+button {
+	border: 1px solid black;
+	background: #eee;
+	cursor: pointer;
+	transition: background 0.3s;
+}
+
+button:hover {
+	background: #cfcff7;
+}
+</style>
+</head>
+
+<body>
+
+<a href="Labs.html" id="back-arrow">&#8592;</a>
+<script>
+$("#back-arrow").on("click", function(e){
+    e.preventDefault();
+    window.location.href = "Labs.html";  
+});
+</script>
+
+<nav id="navbar">
+    <a href="index.html" class="nav-home">Home</a>
+</nav>
+
+<div id="calculator">
+	<h1>Modified Calculator</h1>
+	<p></p>
+
+	<input type="text" id="num1" placeholder="First number">
+	<input type="text" id="num2" placeholder="Second number">
+
+	<select id="operation">
+		<option value="+">Addition (+)</option>
+		<option value="-">Subtraction (-)</option>
+		<option value="*">Multiplication (*)</option>
+		<option value="/">Division (/)</option>
+	</select>
+
+	<input type="text" id="color" placeholder="Result color (e.g. red)">
+
+	<button id="calcBtn">Calculate</button>
+
+	<p id="result"></p>
+</div>
+<script>
+    // Back arrow functionality
+    document.getElementById("back-arrow").addEventListener("click", function(e){
+        e.preventDefault();
+        history.back();  // Go back to previous page
+    });
+</script>
+
+<script>
+$(document).ready(function () {
+
+	$("#calcBtn").on("click", function () {
+
+		let x = parseFloat($("#num1").val());
+		let y = parseFloat($("#num2").val());
+		let op = $("#operation").val();
+		let color = $("#color").val();
+
+		let answer;
+
+		if (isNaN(x) || isNaN(y)) {
+			$("#result").text("Please enter valid numbers.").css("color","black");
+			return;
+		}
+
+		if (op === "+") answer = x + y;
+		else if (op === "-") answer = x - y;
+		else if (op === "*") answer = x * y;
+		else if (op === "/") answer = y !== 0 ? x / y : "Cannot divide by zero";
+
+		$("#result")
+			.text("Result: " + answer)
+			.css("color", color || "black");
+	});
+});
+</script>
+
+</body>
+</html>
