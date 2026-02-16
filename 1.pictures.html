@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Picture Show</title>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+
+        body {
+  font-family: Arial, sans-serif;
+  background: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+#slideshow {
+  width: 800px;
+  max-width: 90vw;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+#slideImage {
+  width: 100%;
+  height: 450px;
+  object-fit: contain;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+#caption {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+#counter {
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+    /* Back arrow at top-left corner */
+#back-arrow {
+	position: fixed;
+	top: 50%;             /* vertical center of viewport */
+	transform: translateY(-50%);
+	left: 15px;
+	font-size: 22px;
+	color: white;
+	background: #1a1a2e;
+	width: 35px;             
+	height: 35px;            
+	display: flex;           /* use flexbox to center */
+	justify-content: center; /* horizontal center */
+	align-items: center;     /* vertical center */
+	/*border-radius: 5px;      */
+	border-radius: 50%;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background 0.3s, color 0.3s;
+	z-index: 1000;
+}
+
+#back-arrow:hover {
+	color: #00eeff;
+	background: #000;
+}
+
+/* Simple centered navbar */
+#navbar {
+	width: 100%;
+	background: #1a1a2e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	text-align: center;
+	padding: 15px 0;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 500;         /* behind arrow */
+}
+
+#navbar .nav-home {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s;
+}
+
+#navbar .nav-home:hover {
+	color: #cfcff7;
+}
+
+</style>
+</head>
+
+<body>
+
+<a href="Labs.html" id="back-arrow">&#8592;</a>
+<script>
+$("#back-arrow").on("click", function(e){
+    e.preventDefault();
+    window.location.href = "Labs.html";  
+});
+</script>
+
+<nav id="navbar">
+    <a href="index.html" class="nav-home">Home</a>
+</nav>
+
+<div id="slideshow">
+  <img id="slideImage" src="" alt="">
+  <div id="caption"></div>
+  <div id="counter"></div>
+  <button id="nextBtn">Next</button>
+</div>
+
+<script>
+$(document).ready(function(){
+
+  const images = [
+    { url: "flowers.png", alt: "Pretty flowers", caption: "Light pink petals" },
+    { url: "Jade Dragon.png", alt: "Jade dragon", caption: "Golden Green Jade" },
+    { url: "Blood sky.png", alt: "A Bloody Crimson Sky", caption: "A bloody yet honorable dual" },
+    { url: "Witherless tree.png", alt: "A Withering Tree", caption: "The witherless tree" }
+  ];
+
+  let index = 0;
+
+  function showImage() {
+    $("#slideImage").fadeOut(200, function(){
+      $(this)
+        .attr("src", images[index].url)
+        .attr("alt", images[index].alt)
+        .fadeIn(200);
+    });
+
+    $("#caption").text(images[index].caption);
+    $("#counter").text(`Image ${index + 1} of ${images.length}`);
+  }
+
+  $("#slideImage").on("error", function(){
+    $("#caption").text("Image failed to load.");
+  });
+
+  $("#nextBtn").on("click", function(){
+    index = (index + 1) % images.length;
+    showImage();
+  });
+
+  $(document).on("keydown", function(e){
+    if (e.key === "ArrowRight") {
+      index = (index + 1) % images.length;
+      showImage();
+    }
+  });
+
+  // Auto slideshow
+  setInterval(function(){
+    index = (index + 1) % images.length;
+    showImage();
+  }, 5000);
+
+  showImage();
+});
+</script>
+
+
+</body>
