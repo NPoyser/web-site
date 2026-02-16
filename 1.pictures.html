@@ -142,11 +142,14 @@ $(document).ready(function(){
   let index = 0;
 	
 function showImage() {
-    $("#slideImage").stop(true, true).fadeOut(200, function() {
-        $(this).attr("src", images[index].url)
-               .attr("alt", images[index].alt)
-               .fadeIn(200);
-    });
+    const $img = $("#slideImage");
+
+    // Remove the previous image from rendering pipeline
+    $img.stop(true, true)
+        .hide()                    // hide immediately
+        .attr("src", images[index].url)
+        .attr("alt", images[index].alt)
+        .fadeIn(300);              // fade in new image smoothly
 
     $("#caption").text(images[index].caption);
     $("#counter").text(`Image ${index + 1} of ${images.length}`);
@@ -182,6 +185,7 @@ function showImage() {
 
 
 </body>
+
 
 
 
