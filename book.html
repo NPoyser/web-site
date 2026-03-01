@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Info</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 80px;
+}
+
+/* Box styling similar to my calculator box */
+#bookContainer {
+    border: 2px solid #1a1a2e;
+    padding: 30px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 10px;
+}
+
+/* Back arrow at top-left corner */
+#back-arrow {
+	position: fixed;
+	top: 50%;             /* vertical center of viewport */
+	transform: translateY(-50%);
+	left: 15px;
+	font-size: 22px;
+	color: white;
+	background: #1a1a2e;
+	width: 35px;             
+	height: 35px;            
+	display: flex;           /* use flexbox to center */
+	justify-content: center; /* horizontal center */
+	align-items: center;     /* vertical center */
+	/*border-radius: 5px;      */
+	border-radius: 50%;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background 0.3s, color 0.3s;
+	z-index: 1000;
+}
+
+#back-arrow:hover {
+	color: #00eeff;
+	background: #000;
+}
+
+/* Simple centered navbar */
+#navbar {
+	width: 100%;
+	background: #1a1a2e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	text-align: center;
+	padding: 15px 0;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 500;         /* behind arrow */
+}
+
+#navbar .nav-home {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s;
+}
+
+#navbar .nav-home:hover {
+	color: #cfcff7;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<a href="Labs.html" id="back-arrow">&#8592;</a>
+<script>
+$("#back-arrow").on("click", function(e){
+    e.preventDefault();
+    window.location.href = "Labs.html";  
+});
+</script>
+
+<nav id="navbar">
+    <a href="index.html" class="nav-home">Home</a>
+</nav>
+
+<div id="bookContainer">
+    <h1>Book Information</h1>
+    <div id="bookInfo"></div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    var book = {
+        "identifiers": {"goodreads": ["1507552"], "librarything": ["6446"]},
+        "title": "Fantastic Mr. Fox",
+        "authors": [{"key": "/authors/OL34184A"}],
+        "publish_date": "October 1, 1988",
+        "publishers": ["Puffin"],
+        "covers": [15152634, 8739161, -1],
+        "contributions": ["Tony Ross (Illustrator)"],
+        "languages": [{"key": "/languages/eng"}],
+        "source_records": ["promise:bwb_daily_pallets_2021-05-13:KP-140-654"],
+        "local_id": ["urn:bwbsku:KP-140-654"],
+        "type": {"key": "/type/edition"},
+        "first_sentence": {"type": "/type/text", "value": "Down in the valley there were three farms."},
+        "key": "/books/OL7353617M",
+        "number_of_pages": 96,
+        "works": [{"key": "/works/OL45804W"}],
+        "classifications": {},
+        "ocaid": "fantasticmrfoxpu00roal",
+        "isbn_10": ["0140328726"],
+        "isbn_13": ["9780140328721"],
+        "latest_revision": 28,
+        "revision": 28
+    };
+
+    $("#bookInfo").html(
+        "<h2>" + book.title + "</h2>" +
+        "<p><strong>Publish Date:</strong> " + book.publish_date + "</p>" +
+        "<p><strong>Publisher:</strong> " + book.publishers[0] + "</p>" +
+        "<p><strong>Pages:</strong> " + book.number_of_pages + "</p>" +
+        "<p><strong>ISBN:</strong> " + book.isbn_13[0] + "</p>" +
+        "<p><strong>First Sentence:</strong> " + book.first_sentence.value + "</p>"
+    );
+
+});
+</script>
+
+</body>
+</html>
