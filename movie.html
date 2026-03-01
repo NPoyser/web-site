@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Info</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0e5f2, #c8d3e0); /* soft gradient */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    min-height: 100vh;
+}
+
+#movieContainer {
+    width: 650px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    margin-top: 50px;
+}
+
+#movieHeader {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+#moviePoster img {
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+#movieDetails h2 {
+    margin: 0 0 10px 0;
+}
+
+.section {
+    margin-top: 15px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+#ratings {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.score {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: #1a1a2e;
+    color: white;
+    font-size: 14px;
+}
+
+.synopsis {
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+#movieDetails p {
+    margin: 5px 0;
+}
+
+#back-arrow {
+	position: fixed;
+	top: 50%;             /* vertical center of viewport */
+	transform: translateY(-50%);
+	left: 15px;
+	font-size: 22px;
+	color: white;
+	background: #1a1a2e;
+	width: 35px;             
+	height: 35px;            
+	display: flex;           /* use flexbox to center */
+	justify-content: center; /* horizontal center */
+	align-items: center;     /* vertical center */
+	/*border-radius: 5px;      */
+	border-radius: 50%;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background 0.3s, color 0.3s;
+	z-index: 1000;
+}
+
+#back-arrow:hover {
+	color: #00eeff;
+	background: #000;
+}
+
+#navbar {
+	width: 100%;
+	background: #1a1a2e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	text-align: center;
+	padding: 15px 0;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 500;         /* behind arrow */
+}
+
+#navbar .nav-home {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s;
+}
+
+#navbar .nav-home:hover {
+	color: #cfcff7;
+}
+</style>
+
+</head>
+
+<body>
+
+<a href="Labs.html" id="back-arrow">&#8592;</a>
+<script>
+$("#back-arrow").on("click", function(e){
+    e.preventDefault();
+    window.location.href = "Labs.html";  
+});
+</script>
+
+<nav id="navbar">
+    <a href="index.html" class="nav-home">Home</a>
+</nav>
+
+<div id="movieContainer">
+    <div id="movieInfo"></div>
+</div>
+
+<script>
+$(document).ready(function(){
+
+    var movie = {
+        "title": "Toy Story 3",
+        "year": 2010,
+        "genres": ["Animation","Kids & Family","Science Fiction & Fantasy","Comedy"],
+        "mpaa_rating": "G",
+        "runtime": 103,
+        "ratings": {
+            "critics_rating": "Certified Fresh",
+            "critics_score": 99,
+            "audience_rating": "Upright",
+            "audience_score": 91
+        },
+        "synopsis": "Pixar returns to their first success with Toy Story 3. The movie begins with Andy leaving for college and donating his beloved toys -- including Woody (Tom Hanks) and Buzz (Tim Allen) -- to a daycare. While the crew meets new friends, including Ken (Michael Keaton), they soon grow to hate their new surroundings and plan an escape. The film was directed by Lee Unkrich from a script co-authored by Little Miss Sunshine scribe Michael Arndt. ~ Perry Seibert, Rovi",
+        "posters": {
+            "thumbnail": "Toy3.png"
+        },
+        "abridged_cast": [
+            {"name": "Tom Hanks", "characters": ["Woody"]},
+            {"name": "Tim Allen", "characters": ["Buzz Lightyear"]},
+            {"name": "Joan Cusack", "characters": ["Jessie the Cowgirl"]},
+            {"name": "Don Rickles", "characters": ["Mr. Potato Head"]},
+            {"name": "Wallace Shawn", "characters": ["Rex"]}
+        ],
+        "abridged_directors": [{"name": "Lee Unkrich"}],
+        "studio": "Walt Disney Pictures",
+        "release_dates": {"theater": "2010-06-18","dvd": "2010-11-02"},
+        "critics_consensus": "Deftly blending comedy, adventure, and honest emotion, Toy Story 3 is a rare second sequel that really works."
+    };
+
+    let genres = movie.genres.join(", ");
+
+    let castList = movie.abridged_cast.map(c => {
+    let chars = c.characters ? " (" + c.characters.join(", ") + ")" : "";
+    return c.name + chars;
+    }).join(", ");
+    let director = movie.abridged_directors[0].name;
+
+    $("#movieInfo").html(
+        "<div id='movieHeader'>" +
+            "<div id='moviePoster'>" +
+                "<img src='" + movie.posters.thumbnail + "'>" +
+            "</div>" +
+
+            "<div id='movieDetails'>" +
+                "<h2>" + movie.title + " (" + movie.year + ")</h2>" +
+                "<p><span class='label'>Rating:</span> " + movie.mpaa_rating + "</p>" +
+                "<p><span class='label'>Runtime:</span> " + movie.runtime + " mins</p>" +
+                "<p><span class='label'>Genres:</span> " + genres + "</p>" +
+                "<p><span class='label'>Director:</span> " + director + "</p>" +
+                "<p><span class='label'>Cast:</span> " + castList + "</p>" +
+                "<p><span class='label'>Studio:</span> " + movie.studio + "</p>" +
+                "<p><span class='label'>Theater Release:</span> " + movie.release_dates.theater + "</p>" +
+                "<p><span class='label'>DVD Release:</span> " + movie.release_dates.dvd + "</p>" +
+            "</div>" +
+        "</div>" +
+
+        "<div id='ratings' class='section'>" +
+            "<span class='score'>Critics: " + movie.ratings.critics_rating + " (" + movie.ratings.critics_score + "%)</span>" +
+            "<span class='score'>Audience: " + movie.ratings.audience_rating + " (" + movie.ratings.audience_score + "%)</span>" +
+        "</div>" +
+
+        "<div class='section'>" +
+            "<p><span class='label'>Critics Consensus:</span> " + movie.critics_consensus + "</p>" +
+        "</div>" +
+
+        "<div class='section'>" +
+            "<p><span class='label'>Synopsis:</span></p>" +
+            "<p class='synopsis'>" + movie.synopsis + "</p>" +
+        "</div>"
+    );
+});
+</script>
+
+</body>
+</html>
