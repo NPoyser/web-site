@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <style>
+ 
+body {
+    display: flex;
+    justify-content: center;   /* center horizontally */
+    align-items: flex-start;       /* center vertically */
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding-top: 90px;         /* space for fixed navbar */
+    min-height: 100vh;         /* ensure full viewport height */
+    box-sizing: border-box;
+}
+
+/* Big box containing all projects */
+.big-project-box {
+    width: 800px;       /* fixed width */
+    max-height: 600px;  /* fixed height, scroll if overflow */
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Title of big box */
+.big-project-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Individual project boxes */
+.project-card {
+    background-color: #f1faff;
+    border-left: 6px solid #3498db;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.project-card:hover {
+    background-color: #e0f4ff;
+}
+
+.project-title {
+    padding: 15px;
+    margin: 0;
+    font-weight: bold;
+}
+
+.project-content {
+    display: none;
+    padding: 15px;
+    border-top: 1px solid #ccc;
+    background-color: #f8faff;
+}
+
+.project-content a {
+    color: #1e90ff;
+    text-decoration: underline;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .big-project-box {
+        background-color: #1a1a2e;
+        color: #fff;
+    }
+    .project-card {
+        background-color: #2b2b4c;
+        border-left: 6px solid #5ebdfd;
+    }
+    .project-card:hover {
+        background-color: #3a3a6c;
+    }
+    .project-content {
+        background-color: #2b2b4c;
+    }
+    .project-content a {
+        color: #4aa8ff;
+    }
+}
+#navbar {
+	width: 100%;
+	background: #1a1a2e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	text-align: center;
+	padding: 15px 0;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 500;         /* behind arrow */
+}
+
+#navbar .nav-home {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s;
+}
+
+#navbar .nav-home:hover {
+	color: #cfcff7;
+}
+
+.page-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;   /* allows wrapping if screen too small */
+}
+
+
+    </style>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+$(document).ready(function(){
+    $(".project-title").on("click", function(){
+        $(this).siblings(".project-content").slideToggle(200);
+    });
+});
+</script>
+    </head>
+    <body>
+        
+        
+        
+      <nav id="navbar">
+        <a href="index.html" class="nav-home">Home</a>
+      </nav>
+        <div class="page-container">
+        <div class="big-project-box">
+    <h2>Individual Project Work</h2>
+    
+    <!-- Individual project cards inside the big box -->
+    <div class="project-card">
+      <p class="project-title">Milestone 1</p>
+      <div class="project-content">
+        <ul>
+          <li><a href="Mile1.html">...</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <p class="project-title">...</p>
+      <div class="project-content">
+        <ul>
+          <li><a href=".html">...</a></li>
+          <li><a href=".html">...</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <p class="project-title">...</p>
+      <div class="project-content">
+        <ul>
+          <li><a href=".html">...</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div> <!-- end big-project-box -->
+
+
+
+<div class="big-project-box">
+    <h2>Other Project Work</h2>
+    
+    <!-- Individual project cards inside the big box -->
+    <div class="project-card">
+      <p class="project-title">...</p>
+      <div class="project-content">
+        <ul>
+          <li><a href=".html">...</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <p class="project-title">...</p>
+      <div class="project-content">
+        <ul>
+          <li><a href=".html">...</a></li>
+          <li><a href=".html">...</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <p class="project-title">...</p>
+      <div class="project-content">
+        <ul>
+          <li><a href=".html">...</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div> <!-- end big-project-box -->
+</div>
+    </body>
