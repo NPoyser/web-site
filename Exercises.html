@@ -111,9 +111,42 @@
               color: #1a8cff;
               text-shadow: 1px 1px 0 #fff;
             }
+
+
+            #navbar {
+	width: 100%;
+	background: #1a1a2e;
+	position: fixed;
+	top: 0;
+	left: 0;
+	text-align: center;
+	padding: 15px 0;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+	z-index: 500;         /* behind arrow */
+}
+
+#navbar .nav-home {
+	color: white;
+	text-decoration: none;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s;
+    margin: 0 20px;  /* add horizontal space */
+}
+
+#navbar .nav-home:hover {
+	color: #cfcff7;
+}
     </style>
     </head>
     <body>
+
+        <nav id="navbar">
+			<a href="Labs.html" class="nav-home">Labs</a>
+            <a href="index.html" class="nav-home">Home</a>
+			<a href="Projects.html" class="nav-home">Projects</a>
+        </nav>
+        
         <h1>Exercises</h1>
         <div class="section">
         <br>
@@ -125,4 +158,5 @@
         </div>
         </div>
         </div>
+
     </body>
