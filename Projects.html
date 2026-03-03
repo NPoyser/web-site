@@ -97,19 +97,41 @@ body {
 	padding: 15px 0;
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 	z-index: 500;         /* behind arrow */
+	display: flex;
+	justify-content: space-between; /* left & right edges */
+    position: relative;
 }
 
 #navbar .nav-home {
-	color: white;
-	text-decoration: none;
-	font-size: 18px;
-	font-weight: bold;
-	transition: color 0.3s;
-	margin: 0 20px;  /* add horizontal space */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+#navbar .nav-left, .nav-right {
+    display: flex;
+    gap: 20px; /* spacing between links */
 }
 
 #navbar .nav-home:hover {
 	color: #cfcff7;
+}
+			
+#navbar .nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+#navbar .nav-link:hover {
+    color: #cfcff7;
 }
 
 .page-container {
@@ -135,9 +157,13 @@ $(document).ready(function(){
         
         
       <nav id="navbar">
-		<a href="Exercises.html" class="nav-home">Exercises</a>
+		<div class="nav-left">
+        <a href="Exercises.html" class="nav-link">Exercises</a>
+    	</div>
         <a href="index.html" class="nav-home">Home</a>
-		<a href="Labs.html" class="nav-home">Labs</a>
+		<div class="nav-right">
+        <a href="Labs.html" class="nav-link">Labs</a>
+   	 	</div>
       </nav>
         <div class="page-container">
         <div class="big-project-box">
@@ -213,4 +239,5 @@ $(document).ready(function(){
 </div>
 
     </body>
+
 
