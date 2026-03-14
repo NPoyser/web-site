@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            padding-top: 60px;
+        }
+
+        /* ---------- NAVBAR ---------- */
+        #navbar {
+            width: 100%;
+            background: #1a1a2e;
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-align: center;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 500;
+        }
+
+        #navbar .nav-home {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 20px;
+            transition: color 0.3s;
+        }
+
+        #navbar .nav-home:hover {
+            color: #cfcff7;
+        }
+
+        /* ---------- BACK ARROW ---------- */
+        #back-arrow {
+            position: fixed;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            font-size: 22px;
+            color: white;
+            background: #1a1a2e;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+            z-index: 1000;
+        }
+
+        #back-arrow:hover {
+            color: #00eeff;
+            background: #000;
+        }
+
+        /* ---------- BOOK CARD ---------- */
+        .book-card {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .book-card img {
+            float: left;
+            margin-right: 20px;
+            max-width: 300px;
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-info h2 {
+            margin-top: 0;
+            font-size: 28px;
+            color: #222;
+        }
+
+        .book-info h3 {
+            margin-top: -20px;
+            font-weight: normal;
+            color: #555;
+        }
+
+        .book-info p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+
+        .book-info p strong {
+            color: #111;
+        }
+
+        .book-info a {
+            color: #1a0dab;
+            text-decoration: none;
+        }
+
+        .book-info a:hover {
+            text-decoration: underline;
+        }
+
+        .section-title {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #404040;
+            border-bottom: 2px solid #b9b9b9;
+            padding-bottom: 2px;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        @media(max-width:768px) {
+            .book-card img {
+                float: none;
+                display: block;
+                margin: 0 auto 20px;
+                max-width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Back Arrow -->
+    <a href="Book Search.html" id="back-arrow">&#8592;</a>
+
+    <!-- Navbar -->
+    <nav id="navbar">
+    <a href="Book Search.html" class="nav-home">Home Search</a>
+    <a href="Book Shelf.html" class="nav-home">My Bookshelf</a>
+    </nav>
+
+    <!-- Book Container -->
+    <div class="book-card" id="book-container">
+        <p>Loading book details...</p>
+    </div>
+
+    <script>
+        // ---------- Get Book ID from URL ----------
+        const params = new URLSearchParams(window.location.search);
+        const bookId = params.get('id');
+
+        if (!bookId) {
+            document.getElementById('book-container').innerHTML =
+                '<p style="color:red;">No book ID provided in URL.</p>';
+        } else {
+            const API_KEY = 'AIzaSyAWfUwfMBxAm7ifXYIGc3rBTV3iNcKnau4'; 
+            const url = `https://www.googleapis.com/books/v1/volumes/${bookId}?key=${API_KEY}`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const info = data.volumeInfo;
+
+                    const title = info.title || "No title available";
+                    const subtitle = info.subtitle || "";
+                    const authors = info.authors ? info.authors.join(', ') : "Unknown author";
+                    const publisher = info.publisher || "Unknown publisher";
+                    const publishedDate = info.publishedDate || "Unknown date";
+                    const description = info.description || "No description available";
+                    const pageCount = info.pageCount || "N/A";
+                    const categories = info.categories ? info.categories.join(', ') : "N/A";
+                    const language = info.language || "N/A";
+                    const previewLink = info.previewLink || "#";
+                    const infoLink = info.infoLink || "#";
+                    const thumbnail = info.imageLinks ? info.imageLinks.thumbnail : "";
+                    const industryIdentifiers = info.industryIdentifiers ? info.industryIdentifiers.map(id => `${id.type}: ${id.identifier}`).join(', ') : "N/A";
+                    const ratingsCount = info.ratingsCount || "N/A";
+                    const averageRating = info.averageRating || "N/A";
+                    const maturityRating = info.maturityRating || "N/A";
+                    //const saleInfo = data.saleInfo?.listPrice ? `${data.saleInfo.listPrice.amount} ${data.saleInfo.listPrice.currencyCode}` : "Not for sale";
+                    let saleInfo = "Not for sale";
+                    if (data.saleInfo) {
+                    if (data.saleInfo.listPrice) {
+                     saleInfo = `${data.saleInfo.listPrice.amount} ${data.saleInfo.listPrice.currencyCode}`;
+                    } else if (data.saleInfo.retailPrice) {
+                        saleInfo = `${data.saleInfo.retailPrice.amount} ${data.saleInfo.retailPrice.currencyCode}`;
+                    } else if (data.saleInfo.buyLink) {
+                     saleInfo = `<a href="${data.saleInfo.buyLink}" target="_blank">Buy Here</a>`;
+                    }
+                    }
+                    
+                    const html = `
+                        ${thumbnail ? `<img src="${thumbnail}" alt="${title} cover">` : ''}
+                        <div class="book-info">
+                            <h2>${title}</h2>
+                            ${subtitle ? `<h3>${subtitle}</h3>` : ''}
+
+                            <p><strong>Author(s):</strong> ${authors}</p>
+                            <p><strong>Publisher:</strong> ${publisher}</p>
+                            <p><strong>Published Date:</strong> ${publishedDate}</p>
+                            <p><strong>Page Count:</strong> ${pageCount}</p>
+                            <p><strong>Categories:</strong> ${categories}</p>
+                            <p><strong>Language:</strong> ${language}</p>
+                            <p><strong>Maturity Rating:</strong> ${maturityRating}</p>
+                            <p><strong>Ratings:</strong> ${averageRating} (${ratingsCount} reviews)</p>
+                            <p><strong>Identifiers:</strong> ${industryIdentifiers}</p>
+                            <p><strong>Price:</strong> ${saleInfo}</p>
+                            
+                            <div class="section-title">Description</div>
+                            <p>${description}</p>
+
+                            <div class="section-title">Links</div>
+                            <p>
+                                <a href="${previewLink}" target="_blank">Preview Book</a>  
+                            </p>
+                        </div>
+                        <div class="clear"></div>
+                    `;
+
+                    document.getElementById('book-container').innerHTML = html;
+                })
+                .catch(err => {
+                    console.error(err);
+                    document.getElementById('book-container').innerHTML =
+                        '<p style="color:red;">Failed to load book data. Try again.</p>';
+                });
+        }
+
+        // ---------- Back Arrow ----------
+        document.getElementById('back-arrow').addEventListener('click', e => {
+            e.preventDefault();
+            window.history.back();
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Search</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f6f9;
+            margin:0;
+            padding:0;
+            text-align:center;
+        }
+        /* ---------- NAVBAR ---------- */
+        #navbar {
+            width: 100%;
+            background: #1a1a2e;
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-align: center;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 500;
+        }
+        #navbar .nav-home {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.3s;
+            margin: 0 20px;
+        }
+        #navbar .nav-home:hover {
+            color: #cfcff7;
+        }
+        /* ---------- BACK ARROW ---------- */
+        #back-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 15px;
+            font-size: 22px;
+            color: white;
+            background: #1a1a2e;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+            z-index: 1000;
+        }
+        #back-arrow:hover {
+            color: #00eeff;
+            background: #000;
+        }
+        /* ---------- PAGE CONTENT ---------- */
+        .content{
+            margin-top:120px;
+        }
+        /* ---------- SEARCH BAR ---------- */
+        .search-container{
+            display:flex;
+            justify-content:center;
+            margin-top:30px;
+            gap:10px;
+        }
+        #searchBox{
+            padding:14px;
+            width:350px;
+            font-size:16px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            outline:none;
+            transition:border .3s, box-shadow .3s;
+        }
+        #searchBox:focus{
+            border-color:#3498db;
+            box-shadow:0 0 5px rgba(52,152,219,0.5);
+        }
+        button{
+            padding:14px 20px;
+            font-size:16px;
+            border:none;
+            background:#3498db;
+            color:white;
+            border-radius:8px;
+            cursor:pointer;
+            transition:background .3s;
+        }
+        button:hover{
+            background:#2980b9;
+        }
+        /* ---------- PAGINATION ---------- */
+        .pagination-controls{
+            margin-top:25px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            gap:5px;
+        }
+        .pagination-controls select,
+        .pagination-controls button{
+            padding:8px 12px;
+            font-size:16px;
+            border-radius:6px;
+            border:1px solid #ccc;
+            outline:none;
+            cursor:pointer;
+            background:white;
+        }
+        .pagination-controls button{
+            color:black;
+            transition: background 0.3s, color 0.3s;
+        }
+        .pagination-controls button:hover{
+            background:#3498db;
+            color:white;
+        }
+        /* ---------- PAGE INFO ---------- */
+        #pageInfo{
+            margin-top:15px;
+            font-size:16px;
+            color:#555;
+        }
+        /* ---------- BOOK GRID ---------- */
+        #results{
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:center;
+            margin:40px;
+            gap:20px;
+        }
+        .book{
+            background:white;
+            width:180px;
+            padding:15px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.1);
+            transition:transform .2s;
+        }
+        .book:hover{
+            transform:translateY(-5px);
+        }
+        .book img{
+            width:120px;
+            height:auto;
+        }
+        .book a{
+            display:block;
+            margin-top:12px;
+            text-decoration:none;
+            font-weight:bold;
+            color:#333;
+        }
+        .book a:hover{
+            color:#3498db;
+        }
+    </style>
+</head>
+<body>
+
+<a href="Projects.html" id="back-arrow">&#8592;</a>
+
+<nav id="navbar">
+    <a href="Book Search.html" class="nav-home">Home Search</a>
+    <a href="Book Shelf.html" class="nav-home">My Bookshelf</a>
+</nav>
+
+<div class="content">
+
+<h2>Search for Books</h2>
+
+<div class="search-container">
+    <input type="text" id="searchBox" placeholder="Search books by title or keyword">
+    <button onclick="searchBooks()">Search</button>
+</div>
+
+<div id="pageInfo"></div>
+
+<div class="pagination-controls">
+    <button id="prevPage">&larr; Prev</button>
+    <select id="pageSelect"></select>
+    <button id="nextPage">Next &rarr;</button>
+</div>
+
+<div id="results"></div>
+
+</div>
+
+<script>
+let currentPage = 1;
+let totalPages = 1;
+let books = [];
+let resultsPerPage = 10;
+
+// Main search function
+function searchBooks() {
+    const searchTerm = document.getElementById("searchBox").value.trim();
+    if (!searchTerm) return;
+
+    books = [];
+    currentPage = 1;
+
+const url2 = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&maxResults=40&startIndex=0&key=AIzaSyAWfUwfMBxAm7ifXYIGc3rBTV3iNcKnau4`;    
+const url1 = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&maxResults=20&startIndex=40&key=AIzaSyAWfUwfMBxAm7ifXYIGc3rBTV3iNcKnau4`;
+
+    Promise.all([fetch(url1).then(r=>r.json()), fetch(url2).then(r=>r.json())])
+    .then(([data1, data2]) => {
+        books = (data1.items || []).concat(data2.items || []);
+        currentPage = 1;
+        createPagination();
+        displayPage(currentPage);
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("results").innerHTML = "<p>Failed to load books. Try again.</p>";
+        document.getElementById("pageInfo").innerText = "";
+    });
+}
+
+function displayPage(page) {
+    const searchTerm = document.getElementById("searchBox").value;
+    if (books.length === 0) {
+        document.getElementById("results").innerHTML = `<p>No books found for "${searchTerm}".</p>`;
+        document.getElementById("pageInfo").innerText = "Page 0 of 0 : No results";
+        return;
+    }
+
+    currentPage = page;
+    const start = (page-1)*resultsPerPage;
+    const end = Math.min(start + resultsPerPage, books.length);
+    const pageBooks = books.slice(start, end);
+
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
+    pageBooks.forEach(book => {
+        const info = book.volumeInfo;
+        resultsDiv.innerHTML += `<div class="book">
+            <img src="${info.imageLinks ? info.imageLinks.thumbnail : ''}">
+            <a href="Book Details.html?id=${book.id}">${info.title || 'No title'}</a>
+        </div>`;
+    });
+
+    document.getElementById("pageSelect").value = page;
+    document.getElementById("pageInfo").innerText =
+        `Page ${currentPage} of ${totalPages} : Showing results ${start+1}-${end} of ${books.length} for "${searchTerm}"`;
+}
+
+function createPagination() {
+    totalPages = Math.ceil(books.length / resultsPerPage);
+    const select = document.getElementById("pageSelect");
+    select.innerHTML = "";
+    for (let i=1; i<=totalPages; i++) {
+        select.innerHTML += `<option value="${i}">Page ${i}</option>`;
+    }
+    select.onchange = () => displayPage(parseInt(select.value));
+}
+
+document.getElementById("prevPage").onclick = () => {
+    if(currentPage>1) displayPage(currentPage-1);
+};
+document.getElementById("nextPage").onclick = () => {
+    if(currentPage<totalPages) displayPage(currentPage+1);
+};
+document.getElementById("searchBox").addEventListener("keypress", e => {
+    if(e.key === "Enter") searchBooks();
+});
+</script>
+</body>
+</html>
