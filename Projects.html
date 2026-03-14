@@ -20,7 +20,8 @@ body {
 
 /* Big box containing all projects */
 .big-project-box {
-    width: 800px;       /* fixed width */
+    width: 100%;
+    max-width: 800px;
     max-height: 600px;  /* fixed height, scroll if overflow */
     overflow-y: auto;
     background-color: #ffffff;
@@ -116,7 +117,8 @@ body {
     display: flex;
     justify-content: center;
     gap: 30px;
-    /*flex-wrap: wrap; */  /* allows wrapping if screen too small */
+    flex-wrap: wrap;   /* allows wrapping if screen too small */
+	padding: 15px;
 }
 
 
@@ -213,6 +215,7 @@ $(document).ready(function(){
 </div>
 
     </body>
+
 
 
 
