@@ -207,10 +207,11 @@ function searchBooks() {
 
 const url2 = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&maxResults=40&startIndex=0&key=AIzaSyAWfUwfMBxAm7ifXYIGc3rBTV3iNcKnau4`;    
 const url1 = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&maxResults=20&startIndex=40&key=AIzaSyAWfUwfMBxAm7ifXYIGc3rBTV3iNcKnau4`;
+const url3 = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}&maxResults=20&startIndex=20&key=AIzaSyAWfUwfMBxAm7ifXYIGc3rBTV3iNcKnau4`;
 
-    Promise.all([fetch(url1).then(r=>r.json()), fetch(url2).then(r=>r.json())])
-    .then(([data1, data2]) => {
-        books = (data1.items || []).concat(data2.items || []);
+    Promise.all([fetch(url1).then(r=>r.json()), fetch(url2).then(r=>r.json()), fetch(url3).then(r=>r.json())])
+    .then(([data1, data2, data3]) => {
+        books = (data1.items || []).concat(data2.items || []).concat(data3.items || []);
         currentPage = 1;
         createPagination();
         displayPage(currentPage);
