@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Album Page</title>
+  <style>
+    /*  Body  */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    /*  Navbar  */
+    #navbar {
+      width: 100%;
+      background: #1a1a2e;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 15px 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 500;
+    }
+
+    #navbar .nav-home {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 0 20px;
+      transition: color 0.3s;
+    }
+
+    #navbar .nav-home:hover {
+      color: #cfcff7;
+    }
+
+    /*  Back Button  */
+    #back-arrow {
+      position: fixed;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      width: 35px;
+      height: 35px;
+      background: #1a1a2e;
+      color: white;
+      font-size: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    #back-arrow:hover {
+      color: #00eeff;
+      background: #000;
+    }
+
+    /*  Container  */
+    .container {
+      max-width: 950px;
+      margin: 100px auto 30px auto; /* space for navbar */
+      padding: 0 10px;
+    }
+
+    #album, #photos {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    /*  Photo Grid  */
+    #photos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .photo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background: #f0f0f0;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      height: 200px; /* fixed height */
+    }
+
+    .photo img {
+      width: 100%;
+      height: 100px; /* fixed image height */
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #ddd;
+    }
+
+    .photo .text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100px; /* remaining space */
+      padding: 5px;
+      text-align: center;
+      font-size: 12px;
+      overflow: hidden;
+    }
+
+    .photo .text p {
+      margin: 2px 0;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back Button -->
+  <a href="#" id="back-arrow">&#8592;</a>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="Exercises.html" class="nav-home">Exercises</a>
+    <a href="index.html" class="nav-home">Home</a>
+    <a href="Projects.html" class="nav-home">Projects</a>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Album Info</h1>
+    <div id="album">Loading...</div>
+
+    <h1>Photos</h1>
+    <div id="photos">Loading...</div>
+  </div>
+
+  <script>
+    //  Back Button 
+    document.getElementById('back-arrow').addEventListener('click', e => {
+      e.preventDefault();
+      window.history.back();
+    });
+
+    //  Get Album ID 
+    const params = new URLSearchParams(window.location.search);
+    const albumId = params.get("albumId");
+
+    if (!albumId) {
+      document.getElementById("photos").innerHTML = "Error: No albumId found in URL";
+    } else {
+      //  Fetch Album Info 
+      fetch(`https://jsonplaceholder.typicode.com/albums/${albumId}`)
+        .then(res => res.json())
+        .then(album => {
+          document.getElementById("album").innerHTML = `
+            <p><strong>Title:</strong> ${album.title}</p>
+            <p><strong>Album ID:</strong> ${album.id}</p>
+            <p><strong>User ID:</strong> ${album.userId}</p>
+          `;
+        });
+
+      //  Fetch Photos 
+      fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${albumId}`)
+        .then(res => res.json())
+        .then(photos => {
+          let html = "";
+          photos.forEach(photo => {
+          html += `
+            <div class="photo">
+              <img src="https://placehold.co/150?text=Loading..."
+                data-src="${photo.thumbnailUrl}">
+            <div class="text">
+            <p>${photo.title}</p>
+            <p><strong>ID:</strong> ${photo.id}</p>
+            </div>
+          </div>
+        `;
+      });
+
+        document.getElementById("photos").innerHTML = html;
+
+        // Preload Images (So it wont glitch)
+        document.querySelectorAll("#photos img").forEach(img => {
+          const realSrc = img.getAttribute("data-src");
+
+          const temp = new Image();
+          temp.src = realSrc;
+
+          temp.onload = () => {
+            img.src = realSrc;
+          };
+
+          temp.onerror = () => {
+            img.src = "https://placehold.co/150?text=No+Image";
+          };
+        });
+        })
+        .catch(err => {
+          console.error("Fetch error:", err);
+          document.getElementById("photos").innerHTML = "Error loading photos";
+        });
+    }
+  </script>
+
+</body>
+</html>
