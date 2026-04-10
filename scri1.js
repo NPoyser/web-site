@@ -619,8 +619,9 @@ $(document).on('click', '#backBtn', function() {
     $("#categorySelect").val(currentCategory);
 
     if (currentCategory === "search") {
+      
+        searchMovies(currentSearchQuery, currentPage);
 
-        searchMovies(currentSearchQuery);
 
         let neededPages = Math.ceil(loadedMovieCount / 20);
 
@@ -631,7 +632,6 @@ $(document).on('click', '#backBtn', function() {
     }
 
     else if (currentCategory === "upcoming") {
-      //  displayMovies(upcomingCachedMovies.slice(0, loadedMovieCount));
       displayUpcomingPage(currentPage);
 
     }
