@@ -263,21 +263,6 @@ function filterUpcomingMovies(movies) {
     });
   }
 
-  // PAGINATION BUTTONS
-
-  //function renderPagination(total, current) {
-  //const maxPages = 5;
-  //let start = Math.max(1, current - 2);
-  //let end = Math.min(total, start + maxPages - 1);
-
-  //let paginationHtml = '';
-  //for (let i = start; i <= end; i++) {
-  //  paginationHtml += `<button class="page-btn ${i === current ? 'active' : ''}" data-page="${i}">${i}</button>`;
-  //}
-
-  //$("#pagination").html(paginationHtml);
-//}
-
 function renderPagination(total, current) {
   total = Math.min(total, MAX_PAGES);
 
@@ -300,8 +285,17 @@ $(document).on("click", ".page-btn", function() {
 
   if (currentCategory === "search") {
     searchMovies(currentSearchQuery, page);
+
+    requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      $("html, body").stop(true).animate({
+        scrollTop: $("#homeView").offset().top
+      }, 350);
+    });
+    });
   } else if (currentCategory === "upcoming") {
     displayUpcomingPage(page);
+    
     $("html, body").stop(true).animate({
       scrollTop: $("#homeView").offset().top
     }, 350);
@@ -524,7 +518,12 @@ $(document).on('click', '.view-more-btn', function() {
 // Search
 
 function searchMovies(query, page = 1) {
-  $("#homeView").html("<p>Searching...</p>");
+  //$("#homeView").html("<p>Searching...</p>");
+  const scrollPos = $(window).scrollTop();
+  const oldHeight = $("#homeView").height();
+
+  $("#homeView").html(`<div style="height:${oldHeight}px"></div>`);
+  
   resetSearchView();
   appMode = "search";  
   currentCategory = "search";     
