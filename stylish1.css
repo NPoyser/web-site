@@ -409,7 +409,7 @@
   background-color: #a4c2c5;
 }
 
-#pagination .active-page {
+#pagination .page-btn.active {
   background-color: #12f3ec;
   color: #000;
 }
@@ -419,4 +419,20 @@
   text-align: center;
   margin: 5px 0 15px 0;
   font-weight: 500;
+}
+
+
+
+
+#movieDetails {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+}
+
+
+
+
+html, body {
+  scroll-behavior: auto; 
 }

@@ -1,3 +1,5 @@
+//626d8d260d921caff14e0afb1daded65
+
 $(document).ready(function () {
 
 const apiKey = "626d8d260d921caff14e0afb1daded65";
@@ -26,6 +28,20 @@ let currentCategory = "popular";
   let upcomingTotalPages = {};
 
   const moviesPerPage = 10;
+  const MAX_RESULTS = 50;
+  const MAX_PAGES = 5;
+
+
+  $("html, body").css({
+  scrollBehavior: "auto"
+  });
+
+  function scrollTo(el) {
+  $("html, body").stop().animate({
+    scrollTop: $(el).offset().top
+  }, 300);
+}
+
 
   //  Filter Upcoming 
 function filterUpcomingMovies(movies) {
@@ -50,7 +66,16 @@ function filterUpcomingMovies(movies) {
   function loadMovies(endpoint, page = 1) {
   currentCategory = endpoint;
   resetSearchView();
-  $("#homeView").html("<p>Loading...</p>");
+
+  const scrollPos = $(window).scrollTop();
+  const oldHeight = $("#homeView").height();
+  //$("#homeView").css("min-height", oldHeight);
+  //$(window).scrollTop(scrollPos);
+
+  //$("#homeView").html("<p></p>");
+  $("#homeView").html(`<div style="height:${oldHeight}px"></div>`);
+  //$("#homeViewContent").html("<p>Loading...</p>");
+  $(window).scrollTop(scrollPos);
 
   if (endpoint === "upcoming") {
       loadUpcomingMoviesMultipleRegions(regions, page);
@@ -63,7 +88,8 @@ function filterUpcomingMovies(movies) {
     data: { api_key: apiKey, page },
     success: function (data) {
       currentPage = data.page;
-      totalPages = data.total_pages;
+      //totalPages = data.total_pages;
+      totalPages = Math.min(data.total_pages, MAX_PAGES);
       lastPageLoaded = data.page;  
 
       const moviesToDisplay = data.results.slice(0, moviesPerPage);
@@ -78,7 +104,7 @@ function filterUpcomingMovies(movies) {
 
   function loadMoreMovies(pageToLoad) {
     const nextPage = pageToLoad || (currentPage + 1);
-    if (currentPage >= totalPages) return;
+    if (currentPage >= MAX_PAGES) return;
     resetSearchView();
 
     let url = currentCategory === "search"
@@ -91,7 +117,7 @@ function filterUpcomingMovies(movies) {
       data: { api_key: apiKey, page: nextPage, query: currentSearchQuery },
       success: function (data) {
         currentPage = data.page;
-        totalPages = data.total_pages;
+        totalPages = Math.min(data.total_pages, MAX_PAGES);
         lastPageLoaded = data.page;
 
         if (currentCategory === "upcoming") {
@@ -100,6 +126,7 @@ function filterUpcomingMovies(movies) {
         }
 
         const moviesToShow = data.results.slice(0, moviesPerPage);
+        
         appendMovies(moviesToShow);
         renderPagination(totalPages, currentPage); 
       }
@@ -108,7 +135,7 @@ function filterUpcomingMovies(movies) {
 
   // UPCOMING MULTI-REGION
   function loadUpcomingMoviesMultipleRegions(regions, page = 1) {
-    $("#homeView").html("<p>Loading...</p>");
+    $("#homeView").html("<p></p>");
 
     // For multi-region, reset pages only on first load
     if (page === 1) {
@@ -120,7 +147,7 @@ function filterUpcomingMovies(movies) {
       $.ajax({
         url: "https://api.themoviedb.org/3/movie/upcoming",
         method: "GET",
-        data: { api_key: apiKey, region: r, page: upcomingPages[r] }
+        data: { api_key: apiKey, region: r, page: 1 }
       })
     );
 
@@ -145,17 +172,22 @@ function filterUpcomingMovies(movies) {
 
         const dedupedMovies = Array.from(movieMap.values());
         const upcomingFiltered = filterUpcomingMovies(dedupedMovies);
-        upcomingCachedMovies = upcomingFiltered;
+        upcomingCachedMovies = upcomingFiltered.slice(0, MAX_RESULTS);
 
         // Calculate slice
-        const moviesToShow = upcomingFiltered.slice((page - 1) * moviesPerPage, page * moviesPerPage);
+        const limitedUpcoming = upcomingFiltered.slice(0, MAX_RESULTS);
+
+        const moviesToShow = limitedUpcoming.slice(
+            (page - 1) * moviesPerPage,
+            page * moviesPerPage
+        );
         displayMovies(moviesToShow);
-        renderPagination(Math.ceil(upcomingFiltered.length / moviesPerPage), page);
+        totalPages = MAX_PAGES;
+        displayUpcomingPage(page);
 
         // Update currentPage
         currentPage = page;
-        // Increment page tracker per region for next load
-        regions.forEach(r => upcomingPages[r] = page + 1);
+        
     })
     .fail(() => {
         $("#homeView").html("<p>Error loading upcoming movies.</p>");
@@ -164,14 +196,14 @@ function filterUpcomingMovies(movies) {
 
   // DISPLAY & APPEND MOVIES
   function displayMovies(movies) {
-    $("#homeView").removeClass("detailed-view");
+    //$("#homeView").removeClass("detailed-view");
+    $("#movieDetails").html("");
     $("#back-arrow").show();
     let title = categoryTitles[currentCategory] || "Movies";
-    //let html = `<h2 class="category-title">${title}</h2><div class="movie-grid">`;
     const startIndex = (currentPage - 1) * moviesPerPage + 1;
-  const endIndex = Math.min((currentPage - 1) * moviesPerPage + movies.length, totalPages * moviesPerPage);
-  const totalResults = currentCategory === "upcoming" ? upcomingCachedMovies.length : totalPages * moviesPerPage;
-  const resultText = `Showing ${startIndex}–${endIndex} of ${totalResults} results`;
+    const endIndex = Math.min((currentPage - 1) * moviesPerPage + movies.length, totalPages * moviesPerPage);
+    const totalResults = Math.min(MAX_RESULTS, totalPages * moviesPerPage);
+    const resultText = `Showing ${startIndex}–${endIndex} of ${totalResults} results`;
 
   let html = `
     <h2 class="category-title">${title}</h2>
@@ -194,11 +226,16 @@ function filterUpcomingMovies(movies) {
 
     html += `</div><div id="pagination" class="pagination-container"></div>`;
     $("#homeView").html(html);
+    //$("#homeViewContent").html(html);
+
 
     $(".movie-card").off("click").on("click", function () {
       loadedMovieCount = $(".movie-card").length;
       lastScroll = $(window).scrollTop();
       loadMovieDetails($(this).data("id"));
+      //setTimeout(() => {
+      //scrollTo("#homeView");
+      //}, 100);
     });
   }
 
@@ -220,19 +257,38 @@ function filterUpcomingMovies(movies) {
       loadedMovieCount = $(".movie-card").length;
       lastScroll = $(window).scrollTop();
       loadMovieDetails($(this).data("id"));
+      //setTimeout(() => {
+      //scrollTo("#homeView");
+      //}, 100);
     });
   }
 
   // PAGINATION BUTTONS
 
-  function renderPagination(total, current) {
-  const maxPages = 5;
-  let start = Math.max(1, current - 2);
-  let end = Math.min(total, start + maxPages - 1);
+  //function renderPagination(total, current) {
+  //const maxPages = 5;
+  //let start = Math.max(1, current - 2);
+  //let end = Math.min(total, start + maxPages - 1);
+
+  //let paginationHtml = '';
+  //for (let i = start; i <= end; i++) {
+  //  paginationHtml += `<button class="page-btn ${i === current ? 'active' : ''}" data-page="${i}">${i}</button>`;
+  //}
+
+  //$("#pagination").html(paginationHtml);
+//}
+
+function renderPagination(total, current) {
+  total = Math.min(total, MAX_PAGES);
 
   let paginationHtml = '';
-  for (let i = start; i <= end; i++) {
-    paginationHtml += `<button class="page-btn ${i === current ? 'active' : ''}" data-page="${i}">${i}</button>`;
+
+  for (let i = 1; i <= total; i++) {
+    paginationHtml += `
+      <button class="page-btn ${i === current ? 'active' : ''}" data-page="${i}">
+        ${i}
+      </button>
+    `;
   }
 
   $("#pagination").html(paginationHtml);
@@ -245,11 +301,37 @@ $(document).on("click", ".page-btn", function() {
   if (currentCategory === "search") {
     searchMovies(currentSearchQuery, page);
   } else if (currentCategory === "upcoming") {
-    loadUpcomingMoviesMultipleRegions(regions, page);
+    displayUpcomingPage(page);
+    $("html, body").stop(true).animate({
+      scrollTop: $("#homeView").offset().top
+    }, 350);
   } else {
     loadMovies(currentCategory, page);
+    
+    requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      $("html, body").stop(true).animate({
+        scrollTop: $("#homeView").offset().top
+      }, 350);
+    });
+    });
+    
   }
+
 });
+
+function displayUpcomingPage(page) {
+    currentPage = page;
+
+    const start = (page - 1) * moviesPerPage;
+    const end = page * moviesPerPage;
+
+    const moviesToShow = upcomingCachedMovies.slice(start, end);
+
+    displayMovies(moviesToShow);
+
+    renderPagination(MAX_PAGES, page);
+}
 
   
 
@@ -265,7 +347,8 @@ function resetSearchView() {
 
 
 function loadMovieDetails(movieId) {
-  $("#homeView").html("<p>Loading details...</p>");
+  $("#movieDetails").html("<p>Loading details...</p>");
+  
   resetSearchView();
 
   // Fetch movie details
@@ -292,8 +375,8 @@ function loadMovieDetails(movieId) {
 
 
 function displayMovieDetails(movie) {
-  $("#homeView").addClass("detailed-view");
-  $("#back-arrow").hide();
+  //$("#homeView").addClass("detailed-view");
+  //$("#back-arrow").hide();
 
   let imageUrl = movie.poster_path
     ? "https://image.tmdb.org/t/p/w300" + movie.poster_path
@@ -317,8 +400,8 @@ function displayMovieDetails(movie) {
     });
   }
 
-  $("#homeView").html(`
-  <button id="backBtn">← Back</button>
+  $("#movieDetails").html(`
+  <button id="backBtn">← Close</button>
   <div class="movie-detail-row">
     <img src="${imageUrl}" alt="poster">
     <div class="movie-info">
@@ -332,13 +415,29 @@ function displayMovieDetails(movie) {
   <br>
   ${castCrewHtml} <!-- Places cast and crew outside row for full width -->
 `);
-
-  
+goToMovieDetails();
 }
 
 
+function goToMovieDetails() {
+  requestAnimationFrame(() => {
+    const el = $("#movieDetails");
+    if (!el.length) return;
+
+    const navbarHeight = $(".navbar").outerHeight() || 0;
+    const extraPadding = 20;
 
 
+    $("html, body").stop(true).animate({
+      scrollTop: el.offset().top - navbarHeight - extraPadding
+    }, 400);
+  });
+}
+
+
+$(document).on("click", "#closeDetailsBtn", function() {
+    $("#movieDetails").html("");
+});
 
 
 
@@ -424,11 +523,9 @@ $(document).on('click', '.view-more-btn', function() {
 
 // Search
 
-
-
 function searchMovies(query, page = 1) {
   $("#homeView").html("<p>Searching...</p>");
-
+  resetSearchView();
   appMode = "search";  
   currentCategory = "search";     
   currentSearchQuery = query; 
@@ -439,7 +536,7 @@ function searchMovies(query, page = 1) {
     data: { api_key: apiKey, query: query, page: page },
     success: function(data) {
       currentPage = data.page;
-      totalPages = data.total_pages;
+      totalPages = Math.min(data.total_pages, MAX_PAGES);
       displayMovies(data.results.slice(0, moviesPerPage));
       renderPagination(totalPages, currentPage);
     },
@@ -535,25 +632,27 @@ $(document).on('click', '#backBtn', function() {
     }
 
     else if (currentCategory === "upcoming") {
+      //  displayMovies(upcomingCachedMovies.slice(0, loadedMovieCount));
+      displayUpcomingPage(currentPage);
 
-        displayMovies(upcomingCachedMovies.slice(0, loadedMovieCount));
-
-        checkAndShowLoadMore(upcomingCachedMovies);
-
-        setTimeout(() => {
-            $(window).scrollTop(lastScroll);
-        }, 100);
     }
 
     else {
 
         loadMovies(currentCategory, lastPageLoaded);
+        setTimeout(() => {
+        $("html, body").stop().animate({
+          scrollTop: lastScroll
+        }, 400);
+        }, 300);
 
     }
 
-    setTimeout(() => {
-        $(window).scrollTop(lastScroll);
-    }, 800);
+    requestAnimationFrame(() => {
+    $("html, body").stop(true).animate({
+      scrollTop: lastScroll
+    }, 300);
+    });
 });
 
 
