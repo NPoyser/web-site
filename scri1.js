@@ -203,7 +203,7 @@ function filterUpcomingMovies(movies) {
     const startIndex = (currentPage - 1) * moviesPerPage + 1;
     const endIndex = Math.min((currentPage - 1) * moviesPerPage + movies.length, totalPages * moviesPerPage);
     const totalResults = Math.min(MAX_RESULTS, totalPages * moviesPerPage);
-    const resultText = `Showing ${startIndex}–${endIndex} of ${totalResults} results`;
+    const resultText = `Showing ${startIndex}-${endIndex} of ${totalResults} results`;
 
   let html = `
     <h2 class="category-title">${title}</h2>
