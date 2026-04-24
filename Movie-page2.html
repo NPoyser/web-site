@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie App</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mustache@4.2.0/mustache.min.js"></script>
+  <link rel="stylesheet" href="stylish2.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<style>
+    body {
+        margin: 0;
+        padding: 50px;
+        font-family: Arial, sans-serif;
+    }
+    #back-arrow {
+	position: fixed;
+	top: 50%;             /* vertical center of viewport */
+	transform: translateY(-50%);
+	left: 15px;
+	font-size: 22px;
+	color: white;
+	background: #1a1a2e;
+	width: 35px;             
+	height: 35px;            
+	display: flex;           /* use flexbox to center */
+	justify-content: center; /* horizontal center */
+	align-items: center;     /* vertical center */
+	/*border-radius: 5px;      */
+	border-radius: 50%;
+	cursor: pointer;
+	text-decoration: none;
+	transition: background 0.3s, color 0.3s;
+	z-index: 1000;
+}
+
+#back-arrow:hover {
+	color: #00eeff;
+	background: #000;
+}
+
+</style>
+</head>
+<body>
+
+
+  <div class="navbar">
+  <div class="nav-left">
+    <button id="homeBtn">Home</button>
+
+    <div class="dropdown">
+      <button class="dropbtn">Movies</button>
+      <div class="dropdown-content">
+        <a href="#" data-category="popular">Popular</a>
+        <a href="#" data-category="top_rated">Top Rated</a>
+        <a href="#" data-category="now_playing">Now Playing</a>
+        <a href="#" data-category="upcoming">Upcoming</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <button id="gridViewBtn">Grid</button>
+    <button id="listViewBtn">List</button>
+    <button id="searchBtn">Search</button>
+  </div>
+</div>
+
+
+
+<div id="searchView" style="display:none;">
+  <div class="search-container">
+    <form id="searchForm">
+      <input type="text" id="searchInput" placeholder="Search movies...">
+      <button type="submit" id="searchSubmit">
+        <i class="fa fa-search"></i>
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
+
+<div id="collectionView"></div>
+<div id="searchResults"></div>
+<div class="results-info"></div>
+
+<div id="gridView" class="movie-grid"></div>
+<div id="listView" class="movie-list" style="display:none;"></div>
+
+
+
+
+<div id="movieDetailsAnchor"></div>
+<div id="pagination"></div>
+<div id="movieDetails"></div>
+
+
+<div id="back-arrow">&#8592;</div>
+
+
+
+
+
+
+
+
+<script id="movie-template" type="x-tmpl-mustache">
+    <div class="movie-card {{mode}}" data-id="{{id}}" style="{{bgStyle}}">
+  
+    <img src="{{image}}" alt="poster">
+    <h3>{{title}}</h3>
+    <p>{{overview}}</p>
+  </div>
+</script>
+
+
+
+
+
+<script id="movie-details-template" type="x-tmpl-mustache">
+
+  <div class="movie-hero" style="background-image:url('{{backdrop}}')">
+    <button id="backBtn"><- Close</button>
+
+    <div class="hero-overlay"></div>
+
+    <div class="movie-detail-row">
+      <img src="{{image}}" alt="poster">
+
+      <div class="movie-info">
+        <h2>{{title}}</h2>
+        <p><strong>Release Date:</strong> {{release_date}}</p>
+        <div class="rating">Rating: {{vote_average}}</div>
+        <p>{{overview}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="movie-extra"></div>
+</script>
+
+<script src="scri2.js"></script>
+
+</body>
+</html>
